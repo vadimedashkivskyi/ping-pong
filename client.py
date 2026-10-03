@@ -5,10 +5,14 @@ from threading import Thread
 
 # ---ПУГАМЕ НАЛАШТУВАННЯ ---
 WIDTH, HEIGHT = 800, 600
+ZERO = 0, 0
 init()
 screen = display.set_mode((WIDTH, HEIGHT))
 clock = time.Clock()
 display.set_caption("Пінг-Понг")
+
+
+
 # ---СЕРВЕР ---
 def connect_to_server():
     while True:
@@ -41,7 +45,7 @@ def receive():
 font_win = font.Font(None, 72)
 font_main = font.Font(None, 36)
 # --- ЗОБРАЖЕННЯ ----
-
+backimg = image.load(f"backbone.png")
 # --- ЗВУКИ ---
 
 # --- ГРА ---
@@ -54,16 +58,14 @@ while True:
     for e in event.get():
         if e.type == QUIT:
             exit()
-
     if "countdown" in game_state and game_state["countdown"] > 0:
-        screen.fill((0, 0, 0))
         countdown_text = font.Font(None, 72).render(str(game_state["countdown"]), True, (255, 255, 255))
         screen.blit(countdown_text, (WIDTH // 2 - 20, HEIGHT // 2 - 30))
         display.update()
         continue  # Не малюємо гру до завершення відліку
 
     if "winner" in game_state and game_state["winner"] is not None:
-        screen.fill((125, 0, 255))
+        screen.blit(backimg, ZERO)
 
         if you_winner is None:  # Встановлюємо тільки один раз
             if game_state["winner"] == my_id:
@@ -88,7 +90,7 @@ while True:
         continue  # Блокує гру після перемоги
 
     if game_state:
-        screen.fill((125, 0, 255))
+        screen.blit(backimg, ZERO)
         draw.rect(screen, (0, 255, 0), (20, game_state['paddles']['0'], 20, 100))
         draw.rect(screen, (255, 0, 255), (WIDTH - 40, game_state['paddles']['1'], 20, 100))
         draw.circle(screen, (255, 255, 255), (game_state['ball']['x'], game_state['ball']['y']), 10)
